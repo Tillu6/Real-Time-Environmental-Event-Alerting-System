@@ -1,0 +1,375 @@
+{
+  "name": "Environmental Alert Dashboard",
+  "description": "Real-time environmental event alerting dashboard with clean, professional design",
+  "version": "1.0.0",
+  "theme": "environmental_professional",
+  "layout": {
+    "type": "grid",
+    "columns": 12,
+    "rows": 8,
+    "responsive": true
+  },
+  "colors": {
+    "primary": "#2E7D5E",
+    "secondary": "#4A90B8", 
+    "accent": "#E74C3C",
+    "warning": "#F39C12",
+    "success": "#27AE60",
+    "background": "#FFFFFF",
+    "surface": "#F8F9FA",
+    "text_primary": "#2C3E50",
+    "text_secondary": "#7F8C8D",
+    "border": "#E1E5E9"
+  },
+  "typography": {
+    "font_family": "Segoe UI, -apple-system, BlinkMacSystemFont, Roboto, sans-serif",
+    "title_size": "24px",
+    "subtitle_size": "18px", 
+    "body_size": "14px",
+    "caption_size": "12px"
+  },
+  "components": {
+    "header": {
+      "type": "container",
+      "position": { "x": 0, "y": 0, "width": 12, "height": 1 },
+      "style": {
+        "background": "linear-gradient(135deg, #2E7D5E 0%, #4A90B8 100%)",
+        "color": "#FFFFFF",
+        "padding": "20px",
+        "border_radius": "8px 8px 0 0"
+      },
+      "content": {
+        "title": "🌍 Environmental Alert Dashboard",
+        "subtitle": "Real-time earthquake and weather monitoring system",
+        "last_updated": "auto"
+      }
+    },
+    "kpi_cards": {
+      "type": "card_container", 
+      "position": { "x": 0, "y": 1, "width": 12, "height": 1 },
+      "cards": [
+        {
+          "title": "Active Earthquakes",
+          "metric": "earthquake_count_24h",
+          "format": "integer",
+          "color": "#E74C3C",
+          "icon": "🌍",
+          "subtitle": "Last 24 hours",
+          "trend": "earthquake_trend_7d",
+          "width": 3
+        },
+        {
+          "title": "Weather Alerts", 
+          "metric": "weather_alerts_active",
+          "format": "integer", 
+          "color": "#4A90B8",
+          "icon": "⛈️",
+          "subtitle": "Currently active",
+          "trend": "weather_alert_trend", 
+          "width": 3
+        },
+        {
+          "title": "Anomalies Detected",
+          "metric": "anomalies_detected_24h", 
+          "format": "integer",
+          "color": "#F39C12",
+          "icon": "⚠️",
+          "subtitle": "Requiring attention",
+          "trend": "anomaly_trend",
+          "width": 3  
+        },
+        {
+          "title": "System Health",
+          "metric": "system_health_score",
+          "format": "percentage",
+          "color": "#27AE60", 
+          "icon": "✅",
+          "subtitle": "Data freshness",
+          "trend": "health_trend",
+          "width": 3
+        }
+      ]
+    },
+    "earthquake_map": {
+      "type": "map",
+      "position": { "x": 0, "y": 2, "width": 8, "height": 3 },
+      "title": "Recent Earthquake Activity",
+      "data_source": "earthquakes_silver",
+      "config": {
+        "map_type": "world",
+        "center": { "lat": 20, "lon": 0 },
+        "zoom": 2,
+        "cluster": true,
+        "marker_config": {
+          "size_field": "magnitude",
+          "color_field": "severity_category", 
+          "size_range": [8, 40],
+          "color_palette": {
+            "Micro": "#27AE60",
+            "Minor": "#F1C40F", 
+            "Light": "#E67E22",
+            "Moderate": "#E74C3C",
+            "Strong": "#9B59B6",
+            "Major": "#8E44AD",
+            "Great": "#2C3E50"
+          }
+        },
+        "tooltip": {
+          "fields": ["magnitude", "place", "event_time", "depth_km"],
+          "format": "Magnitude {magnitude} • {place}<br/>Time: {event_time}<br/>Depth: {depth_km} km"
+        },
+        "filters": {
+          "time_range": "last_7_days",
+          "min_magnitude": 2.5
+        }
+      }
+    },
+    "alert_feed": {
+      "type": "list",
+      "position": { "x": 8, "y": 2, "width": 4, "height": 3 },
+      "title": "🚨 Recent Alerts",
+      "data_source": "recent_alerts",
+      "config": {
+        "max_items": 8,
+        "auto_refresh": true,
+        "refresh_interval": 30,
+        "item_template": {
+          "layout": "card",
+          "fields": {
+            "primary": "headline",
+            "secondary": "location", 
+            "metadata": "time_ago",
+            "severity": "severity_level"
+          },
+          "severity_colors": {
+            "Critical": "#E74C3C",
+            "High": "#F39C12",
+            "Medium": "#F1C40F", 
+            "Low": "#27AE60"
+          }
+        }
+      }
+    },
+    "magnitude_trend": {
+      "type": "line_chart",
+      "position": { "x": 0, "y": 5, "width": 6, "height": 2 },
+      "title": "📈 Earthquake Magnitude Trends",
+      "data_source": "earthquake_hourly_stats",
+      "config": {
+        "x_axis": "hour_window",
+        "y_axis": "avg_magnitude",
+        "secondary_y": "earthquake_count", 
+        "time_range": "last_7_days",
+        "chart_type": "line_and_column",
+        "colors": {
+          "line": "#E74C3C",
+          "column": "#BDC3C7"
+        },
+        "smooth": true,
+        "show_markers": true,
+        "legend": {
+          "position": "top",
+          "labels": ["Average Magnitude", "Event Count"]
+        }
+      }
+    },
+    "weather_severity": {
+      "type": "donut_chart", 
+      "position": { "x": 6, "y": 5, "width": 3, "height": 2 },
+      "title": "🌦️ Weather Alert Severity",
+      "data_source": "weather_severity_breakdown",
+      "config": {
+        "value_field": "alert_count",
+        "category_field": "severity",
+        "colors": {
+          "Extreme": "#8E44AD",
+          "Severe": "#E74C3C", 
+          "Moderate": "#F39C12",
+          "Minor": "#F1C40F"
+        },
+        "show_labels": true,
+        "show_legend": true,
+        "center_text": {
+          "primary": "total_alerts",
+          "secondary": "Total Alerts"
+        }
+      }
+    },
+    "anomaly_heatmap": {
+      "type": "matrix",
+      "position": { "x": 9, "y": 5, "width": 3, "height": 2 },
+      "title": "🔥 Anomaly Detection Heatmap", 
+      "data_source": "anomaly_geographic_summary",
+      "config": {
+        "rows": "geographic_region",
+        "columns": "anomaly_type",
+        "values": "anomaly_count",
+        "color_scale": {
+          "min_color": "#FFFFFF",
+          "max_color": "#E74C3C",
+          "steps": 5
+        },
+        "show_values": true,
+        "cell_border": true
+      }
+    },
+    "timeline": {
+      "type": "timeline",
+      "position": { "x": 0, "y": 7, "width": 12, "height": 1 },
+      "title": "📅 Event Timeline (Last 24 Hours)",
+      "data_source": "events_timeline",
+      "config": {
+        "time_field": "event_time", 
+        "category_field": "event_type",
+        "size_field": "severity_score",
+        "color_field": "event_category",
+        "colors": {
+          "earthquake": "#E74C3C",
+          "weather": "#4A90B8",
+          "anomaly": "#F39C12"
+        },
+        "zoom_level": "hour",
+        "show_bands": true,
+        "interactive": true
+      }
+    }
+  },
+  "filters": {
+    "global_filters": [
+      {
+        "type": "date_range",
+        "field": "event_time",
+        "default": "last_7_days",
+        "position": "top_right"
+      },
+      {
+        "type": "dropdown",
+        "field": "geographic_region", 
+        "multi_select": true,
+        "default": "all",
+        "position": "top_right"
+      },
+      {
+        "type": "slider",
+        "field": "magnitude",
+        "min": 1.0,
+        "max": 10.0,
+        "default": [2.5, 10.0],
+        "step": 0.1,
+        "position": "top_right"
+      }
+    ]
+  },
+  "interactions": {
+    "cross_filter": true,
+    "drill_through": [
+      {
+        "from": "earthquake_map",
+        "to": "earthquake_detail_page",
+        "trigger": "click"
+      },
+      {
+        "from": "alert_feed", 
+        "to": "alert_detail_page",
+        "trigger": "click"
+      }
+    ],
+    "bookmarks": [
+      {
+        "name": "Critical Events",
+        "filters": {
+          "severity": ["Critical", "High"],
+          "time_range": "last_24_hours"
+        }
+      },
+      {
+        "name": "Pacific Ring of Fire",
+        "filters": {
+          "geographic_region": ["Japan Region", "Indonesia Region", "Chile Region"],
+          "magnitude": [4.0, 10.0]
+        }
+      }
+    ]
+  },
+  "mobile_layout": {
+    "enabled": true,
+    "breakpoint": "768px",
+    "layout": "stacked",
+    "components": {
+      "header": { "height": "auto" },
+      "kpi_cards": { 
+        "layout": "vertical",
+        "cards_per_row": 2
+      },
+      "earthquake_map": { "height": "400px" },
+      "alert_feed": { "height": "300px" }
+    }
+  },
+  "accessibility": {
+    "high_contrast": true,
+    "screen_reader": true,
+    "keyboard_navigation": true,
+    "alt_text": true,
+    "color_blind_friendly": true
+  },
+  "performance": {
+    "lazy_loading": true,
+    "cache_duration": "5_minutes",
+    "max_data_points": 10000,
+    "aggregation_level": "auto"
+  },
+  "alerts": {
+    "data_alerts": [
+      {
+        "name": "Major Earthquake Alert",
+        "condition": "magnitude >= 6.0",
+        "notification": ["teams", "sms"],
+        "recipients": "critical_contacts"
+      },
+      {
+        "name": "Severe Weather Alert", 
+        "condition": "severity == 'Extreme'",
+        "notification": ["teams"],
+        "recipients": "weather_team"
+      },
+      {
+        "name": "Anomaly Detection Alert",
+        "condition": "anomaly_score > 0.8", 
+        "notification": ["teams"],
+        "recipients": "data_team"
+      }
+    ]
+  },
+  "data_sources": {
+    "earthquakes_silver": {
+      "connection": "fabric_lakehouse",
+      "table": "environmental_silver.earthquakes",
+      "refresh": "streaming"
+    },
+    "weather_silver": {
+      "connection": "fabric_lakehouse", 
+      "table": "environmental_silver.weather",
+      "refresh": "streaming"
+    },
+    "anomaly_results": {
+      "connection": "fabric_lakehouse",
+      "table": "environmental_gold.anomaly_detection", 
+      "refresh": "scheduled"
+    }
+  },
+  "export_options": {
+    "pdf": {
+      "enabled": true,
+      "layout": "landscape",
+      "include_filters": true
+    },
+    "powerpoint": {
+      "enabled": true,
+      "template": "environmental_template"
+    },
+    "excel": {
+      "enabled": true,
+      "include_raw_data": false
+    }
+  }
+}
